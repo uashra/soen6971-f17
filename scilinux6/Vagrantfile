@@ -71,25 +71,11 @@ Vagrant.configure("2") do |config|
     yum update -y
     yum install -y gcc-gfortran git zlib-devel bzip2 bzip2-devel \
                     readline-devel sqlite sqlite-devel openssl-devel xz xz-devel \
-                    xterm tcl tk
+                    xterm tcl tcl-devel tk tk-devel
     yum groupinstall -y 'X Window System' 'Desktop'
   SHELL
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
-    wget -O tcl8.7a1-src.tar.gz https://sourceforge.net/projects/tcl/files/Tcl/8.7a1/tcl8.7a1-src.tar.gz/download
-    tar -zxvf tcl8.7a1-src.tar.gz
-    pushd tcl8.7a1/unix
-    ./configure
-    make && make install
-    popd
-
-    wget -O tk8.7a1-src.tar.gz https://sourceforge.net/projects/tcl/files/Tcl/8.7a1/tk8.7a1-src.tar.gz/download
-    tar -zxvf tk8.7a1-src.tar.gz
-    pushd tk8.7a1/unix
-    ./configure
-    make && make install
-    popd
-
     git clone https://github.com/pyenv/pyenv.git "$HOME/.pyenv"
     echo "" >> "$HOME/.bash_profile"     # just need a new line
     echo 'export PYENV_ROOT="$HOME/.pyenv"' >> "$HOME/.bash_profile"
