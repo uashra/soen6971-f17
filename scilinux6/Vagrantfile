@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "scilinux6"
-  config.vm.box_url = "../packer_scientific-6.5-x86_64-virtualbox_virtualbox.box"
+  config.vm.box_url = "packer_scientific-6.5-x86_64-virtualbox_virtualbox.box"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -69,13 +69,72 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     yum update -y
-    yum install -y gcc-gfortran git zlib-devel bzip2 bzip2-devel \
+    yum install -y gcc-c++ cmake gcc-gfortran zlib-devel bzip2 bzip2-devel \
                     readline-devel sqlite sqlite-devel openssl-devel xz xz-devel \
-                    xterm tcl tcl-devel tk tk-devel
-    yum groupinstall -y 'X Window System' 'Desktop'
+                    xterm tcl tcl-devel tk tk-devel xcb-util-devel qt qt-devel \
+                    m4 zip git mercurial scl-utils openmotif-devel
+    yum -y groupinstall "X Window System" "Desktop" "Fonts" "General Purpose Desktop"
+
+    # http://linux.web.cern.ch/linux/devtoolset/
+    pushd /etc/yum.repos.d/
+    wget -O /etc/yum.repos.d/slc6-devtoolset.repo http://linuxsoft.cern.ch/cern/devtoolset/slc6-devtoolset.repo
+    popd
+    yum update
+    yum install -y devtoolset-1.1
+    source scl_source enable devtoolset-1.1
+
+    mkdir coin3d
+    pushd coin3d
+
+    hg clone https://bitbucket.org/Coin3D/simage
+    pushd simage
+    ./configure && make -j2 && make install
+    popd
+
+    hg clone https://bitbucket.org/Coin3D/boost-header-libs-full
+    hg clone https://bitbucket.org/Coin3D/generalmsvcgeneration
+    hg clone -U https://bitbucket.org/Coin3D/coin
+    pushd coin
+    hg_hash=$(hg log -l 1 | head -n 1 | grep -oP ':[^:]+' | tail -n 1 | grep -oP '[^:]+')
+    hg revert --all --rev CMake --exclude build/general --exclude include/boost
+    popd
+    ln -s `pwd`/generalmsvcgeneration `pwd`/coin/build/general
+    ln -s `pwd`/boost-header-libs-full `pwd`/coin/include/boost
+    pushd coin
+    ./configure --enable-3ds-import && make -j2 && make install
+    popd
+    mkdir coin_build
+    pushd coin_build
+    cmake ../coin && make -j2 && make install
+    popd
+
+    # because we only installed 64bit libraries
+    mv -f /usr/local/lib/libCoin.so /usr/local/lib/libCoin.so.old
+    mv -f /usr/local/lib/libCoin.so.80 /usr/local/lib/libCoin.so.80.old
+    mv -f /usr/local/lib/libCoin.so.80.0.0 /usr/local/lib/libCoin.so.80.0.0.old
+    cp -f /usr/local/lib64/libCoin.so /usr/local/lib/
+    cp -f /usr/local/lib64/libCoin.so.4.0.0 /usr/local/lib/
+
+    hg clone https://bitbucket.org/Coin3D/soanydata
+    hg clone https://bitbucket.org/Coin3D/sogui
+    hg clone -U https://bitbucket.org/Coin3D/soqt
+    pushd soqt
+    hg_hash=$(hg log -l 1 | head -n 1 | grep -oP ':[^:]+' | tail -n 1 | grep -oP '[^:]+')
+    hg revert --all --rev $hg_hash --exclude build/general --exclude data --exclude src/Inventor/Qt/common
+    popd
+    ln -s `pwd`/sogui `pwd`/soqt/src/Inventor/Qt/common
+    pushd soqt
+    ./configure && make -j2 && make install
+    popd
+
+    popd
   SHELL
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
+    source scl_source enable devtoolset-1.1
+
+    echo "export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64" >> "$HOME/.bash_profile"
+
     git clone https://github.com/pyenv/pyenv.git "$HOME/.pyenv"
     echo "" >> "$HOME/.bash_profile"     # just need a new line
     echo 'export PYENV_ROOT="$HOME/.pyenv"' >> "$HOME/.bash_profile"
@@ -87,10 +146,12 @@ Vagrant.configure("2") do |config|
     pyenv install 2.7.14
     pyenv global 2.7.14
 
+    pip install --user numpy scipy matplotlib ipython jupyter pandas sympy nose
+
     wget -O auto07p.tar.gz https://sourceforge.net/projects/auto-07p/files/latest/download?source=files
     tar -xzvf auto07p.tar.gz
     cd auto/07p
-    ./configure && make && make clean
+    ./configure --enable-gui && make -j2 && make clean
     echo ". $PWD/cmds/auto.env.sh" >> "$HOME/.bash_profile"
     exec "$SHELL"
   SHELL
