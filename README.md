@@ -31,7 +31,13 @@ Following commands will create Scintific Linux 6.9 operating system image file f
 1. $ cd scilinux6
 2. $ packer build packer.aws.json
 
-After this you need to create an instance on AWS EC2 with the image. After the instance is up and running, you can connect either by SSH or VNC client.
+After this you need to create an instance on AWS EC2 with the image. After the instance is up and running, you can connect by SSH
+
+1. $ ssh root@INSTANCE-IP
+2. $ /sbin/service vncserver start
+3. $ iptables -I INPUT -p tcp --dport 5901 -j ACCEPT
+
+An now you can also connect by VNC client.
 
 Sometimes packer build will take longer than expected without reporting progress. In that case, you can kill packer build and manually upload the file to S3 and import following this guide http://docs.aws.amazon.com/vm-import/latest/userguide/vmimport-image-import.html#import-vm
 
