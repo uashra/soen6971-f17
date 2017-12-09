@@ -59,7 +59,7 @@ Now you need to manually upload the file to S3 and import it. For more info visi
 
 ```bash
 $ aws s3 cp FILENAME.OVA s3://BUCKET_NAME
-$ cat > containers.json << EOL
+$ cat > aws/import-vm.json << EOL
         [
           {
             "Description": "Scintific Linux 6.9 OVA",
