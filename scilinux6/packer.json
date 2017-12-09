@@ -5,7 +5,7 @@
       "template_name": "scientific-6.5-x86_64",
       "template_os": "RedHat_64",
 
-      "iso_url": "http://ftp.scientificlinux.org/linux/scientific/6.9/x86_64/iso/SL-69-x86_64-2017-04-11-DVD-DL.iso",
+      "iso_url": "file:///home/umair/Downloads/Linux/Scientific Linux/SL-69-x86_64-2017-04-11-DVD-DL.iso",
       "iso_checksum": "85ff429a8e02be5119431a64695da3324ffe03b2",
       "iso_checksum_type": "sha1",
 
@@ -17,7 +17,7 @@
 
   "builders": [
     {
-      "name": "{{user `template_name`}}-{{user `provisioner`}}",
+      "name": "{{user `template_name`}}-{{timestamp}}",
       "type": "virtualbox-iso",
       "boot_command": [
         "<tab> <wait>",
