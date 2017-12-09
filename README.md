@@ -45,7 +45,7 @@ After this you need to create an instance on AWS EC2 with the image. After the i
 
 An now you can also connect by VNC client.
 
-Sometimes packer build will take longer than expected without reporting progress. In that case, you can kill packer build and manually upload the file to S3 and import following this guide http://docs.aws.amazon.com/vm-import/latest/userguide/vmimport-image-import.html#import-vm
+Now you need to manually upload the file to S3 and import it. For more info visit http://docs.aws.amazon.com/vm-import/latest/userguide/vmimport-image-import.html#import-vm
 
 1. $ aws s3 cp FILENAME.OVA s3://BUCKET_NAME
 2. $ cat > containers.json << EOL
