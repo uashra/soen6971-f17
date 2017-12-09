@@ -1,4 +1,10 @@
+# Introduction
+
+In this project the goal is to write an automation script for the installation of AUTO software on different operating systems and considering the limited time, Scientific Linux 6 and Scientific Linux 7 are two chosen operating systems.
+
 # Local
+
+To run this project on your computer you need a Linux operating system but it will most likey work on MAC and Wwindows as well. You also need VirtualBox, Vagrant and Packer.
 
 ## Start Virtual Machine
 
