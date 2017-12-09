@@ -66,7 +66,7 @@ $ cat > aws/import-vm.json << EOL
             "Format": "ova",
             "UserBucket": {
                 "S3Bucket": "soen6971",
-                "S3Key": "packer-scientific-6.5-x86_64-1512576109-1512576109.ova"
+                "S3Key": "FILENAME.OVA"
             }
         }]
      EOL
