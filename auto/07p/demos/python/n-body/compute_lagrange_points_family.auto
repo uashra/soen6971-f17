@@ -1,0 +1,41 @@
+# This script computes the initial circle of solutions for mu=0
+# as well as the bifurcating branches which give us the
+# Lagrange points.  It then plots the full bifurcation diagram.
+
+# Load 3d.c and c.3d into the AUTO CLUI
+
+# Add a stopping condition so we only compute the loop once
+
+# We tell AUTO to stop when parameter 16 is 0.991, parameter 1 is -0.1,
+# or parameter 1 is 1.1.  If parameter1 is 0.5 we just report
+# a point.
+
+# We also want to compute branches for the first 4 bifurcation
+# points.
+
+# IPS=0 tells AUTO to compute a family of equilibria.
+
+# Compute the circle.
+# This command parses returns a Python object which contains 
+# all of the data in the file in an easy to use format.
+circle = run('3d',UZR={-16:0.991, -1:[-0.1,1.1], 1:0.5}, MXBF=-4, IPS=0)
+
+# Use the label of the last solution of the previous calculation
+# and use this solution as the starting point of the next
+# calculation.
+
+# Do not compute any bifurcating branches.
+
+# We tell AUTO to stop when parameter 16 is 1.0, parameter 1 is -0.1,
+# or parameter 1 is 1.1.  If parameter1 is 0.5 we just report
+# a point.
+
+# Run the calculation
+lagrangep = run(circle, MXBF=0, UZR={-16:1.0, -1:[-0.1,1.1], 1:0.5})
+
+# Save the circle and data in b.lagrange_points,  s.lagrange_points,
+# and d.lagrange_points. 
+save(circle + lagrangep, 'lagrange_points')
+
+# Plot the solutions
+p3('lagrange_points')

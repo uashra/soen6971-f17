@@ -1,0 +1,4 @@
+demo('ab')
+ab = load(equation='ab')
+ab = load(ab, constants='ab.1')
+run(ab)

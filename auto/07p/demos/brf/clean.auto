@@ -1,0 +1,11 @@
+
+#==============
+# AUTO Demo brf
+#==============
+
+print "\n***Clean the directory***"
+import os,glob
+dl('brf')
+cl()
+for f in glob.glob('brf.mod'):
+    os.remove(f)

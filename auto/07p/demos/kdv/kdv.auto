@@ -1,0 +1,7 @@
+r1=run('kdv',sv='1')
+r2=run(r1,c='kdv.2',sv='2')
+r3=run(r2,c='kdv.3',sv='3')
+r4=run(r3('UZ2'),c='kdv.4',sv='4')
+r5=run(r4,c='kdv.5',sv='5')
+r6=run(r5('UZ1'),c='kdv.6',sv='6')
+r7=run(r6('UZ2'),c='kdv.7',sv='7')

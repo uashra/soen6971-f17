@@ -1,0 +1,35 @@
+
+#============================================
+# AUTO Demo r3b: Computing unstable manifolds
+#============================================
+
+import compute_lps,ext,data,os
+
+if not os.path.exists('s.H1'):
+    auto('r3b.auto')
+
+print "\n***Add the zero adjoint variable***"
+sext = ext.get('H1',7,-1e-3)
+
+print "\n*** Compute the Floquet eigenfunction***"
+flq = run(sext,c='flq',e='flq',sv='flq')
+
+print "\n*** Extract data for the selected orbit from s.flq***"
+startman = data.get(flq('UZ1'))
+
+print "\n*** Time integration using continuation***"
+startH1a = run(startman,e='man',c='man.H1a.0',sv='startH1a')
+
+print "\n*** Compute part of the unstable manifold***"
+startUZs = startH1a('UZ')
+startUZ = startUZs[0]
+for s in startUZs:
+    # find minimum
+    if abs(s.PAR(21)) < abs(startUZ.PAR(21)):
+        startUZ = s
+H1a = run(startUZ,c='man.H1a.1')
+save(rl(H1a),'H1a')
+
+print "\n***Clean the directory***"
+cl()
+

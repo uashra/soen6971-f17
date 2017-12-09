@@ -1,0 +1,9 @@
+
+#==============
+# AUTO Demo pp2
+#==============
+
+print "\n***Clean the directory***"
+delete('pp2')
+delete('ps')
+cl()

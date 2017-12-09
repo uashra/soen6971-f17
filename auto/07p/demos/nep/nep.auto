@@ -1,0 +1,15 @@
+
+#==============
+# AUTO Demo nep
+#==============
+
+print "\n***Compute the basic solution family***"
+nep = run(e='nep',c='nep.1')
+
+print "\n***Compute bifurcating solution families***"
+for solution in nep('BP'):
+    nep = nep + run(solution,c='nep.2')
+
+save(nep,'nep')
+print "\n***Clean the directory***"
+cl()

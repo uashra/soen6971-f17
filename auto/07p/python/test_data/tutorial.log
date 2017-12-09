@@ -1,0 +1,200 @@
+Copying demo ab ... done
+Runner configured
+
+***Generate starting data***
+gfortran -fopenmp -O -c ab.f90 -o ab.o
+gfortran -fopenmp -O ab.o -o ab.exe /home/boldeman/auto/07p/lib/*.o
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(2)        L2-NORM         U(1)          U(2)     
+   1     1  EP    1   8.00000E+00   0.00000E+00   0.00000E+00   0.00000E+00
+   1    31  UZ    2   1.40000E+01   0.00000E+00   0.00000E+00   0.00000E+00
+   1    36  UZ    3   1.50000E+01   0.00000E+00   0.00000E+00   0.00000E+00
+   1    41  UZ    4   1.60000E+01   0.00000E+00   0.00000E+00   0.00000E+00
+   1    46  UZ    5   1.70000E+01   0.00000E+00   0.00000E+00   0.00000E+00
+   1    51  UZ    6   1.80000E+01   0.00000E+00   0.00000E+00   0.00000E+00
+
+ Total Time    0.125E-01
+ab ... done
+
+***Compute stationary solution families***
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM         U(1)          U(2)     
+   1    14  UZ    7   2.50000E-01   7.22011E-01   3.22893E-01   6.45786E-01
+
+ Total Time    0.640E-02
+ab ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM         U(1)          U(2)     
+   1    28  HB    7   1.65042E-01   1.47770E+00   4.05955E-01   1.42084E+00
+   1    58  UZ    8   2.50000E-01   2.94686E+00   8.09564E-01   2.83347E+00
+
+ Total Time    0.134E-01
+ab ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM         U(1)          U(2)     
+   1    28  HB    7   1.46882E-01   1.44760E+00   3.72992E-01   1.39872E+00
+   1    67  UZ    8   2.50000E-01   3.35710E+00   8.65000E-01   3.24375E+00
+
+ Total Time    0.144E-01
+ab ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM         U(1)          U(2)     
+   1    27  HB    7   1.32538E-01   1.42450E+00   3.45491E-01   1.38197E+00
+   1    74  UZ    8   2.50000E-01   3.72020E+00   9.02281E-01   3.60912E+00
+
+ Total Time    0.165E-01
+ab ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM         U(1)          U(2)     
+   1    27  HB    7   1.20866E-01   1.40614E+00   3.22062E-01   1.36877E+00
+   1    32  LP    8   1.21901E-01   1.65357E+00   3.78732E-01   1.60961E+00
+   1    54  LP    9   1.17015E-01   2.71249E+00   6.21268E-01   2.64039E+00
+   1    80  HB   10   2.17079E-01   3.98722E+00   9.13231E-01   3.88123E+00
+   1    82  UZ   11   2.49999E-01   4.05225E+00   9.28125E-01   3.94453E+00
+
+ Total Time    0.181E-01
+ab ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM         U(1)          U(2)     
+   1    26  HB    7   1.11153E-01   1.39119E+00   3.01792E-01   1.35806E+00
+   1    29  LP    8   1.11565E-01   1.53659E+00   3.33333E-01   1.50000E+00
+   1    60  LP    9   9.95741E-02   3.07318E+00   6.66667E-01   3.00000E+00
+   1    84  HB   10   1.83833E-01   4.24297E+00   9.20430E-01   4.14194E+00
+   1    87  UZ   11   2.50000E-01   4.36311E+00   9.46491E-01   4.25921E+00
+
+ Total Time    0.188E-01
+ab ... done
+
+***Relabel and save the output files***
+Relabeling done
+Saving to b.ab, s.ab, and d.ab ... done
+
+***Compute periodic solution families***
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM       MAX U(1)      MAX U(2)       PERIOD    
+   2   161  UZ   18   2.50000E-01   3.02968E+00   9.95387E-01   6.87995E+00   2.22034E+00
+
+ Total Time    0.295E+00
+ab ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM       MAX U(1)      MAX U(2)       PERIOD    
+   4   222  UZ   18   2.50000E-01   3.37532E+00   9.87350E-01   5.87488E+00   1.72637E+00
+
+ Total Time    0.399E+00
+ab ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM       MAX U(1)      MAX U(2)       PERIOD    
+   6   309  UZ   18   2.50000E-01   3.72137E+00   9.36686E-01   4.12902E+00   1.23162E+00
+
+ Total Time    0.551E+00
+ab ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM       MAX U(1)      MAX U(2)       PERIOD    
+   8   116  UZ   18   1.20102E-01   2.07774E+00   4.77420E-01   2.02903E+00   9.99882E+02
+
+ Total Time    0.218E+00
+ab ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM       MAX U(1)      MAX U(2)       PERIOD    
+  11   349  UZ   18   1.19455E-01   2.17761E+00   9.99221E-01   9.34036E+00   9.99989E+02
+
+ Total Time    0.727E+00
+ab ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM       MAX U(1)      MAX U(2)       PERIOD    
+  13    67  UZ   18   1.10829E-01   1.75170E+00   3.80862E-01   1.71388E+00   9.99998E+02
+
+ Total Time    0.133E+00
+ab ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM       MAX U(1)      MAX U(2)       PERIOD    
+  16   205  MX   18   1.13210E-01   2.84764E+00   1.00476E+00   1.26297E+01   6.14785E+00
+
+ Total Time    0.390E+00
+ab ... done
+
+***Relabel and save the output files***
+Relabeling done
+Saving to b.ab, s.ab, and d.ab ... done
+
+***Clean the directory***
+Deleting fort.* *.o *.exe *.*~ ... done
+
+***Clean the directory***
+Deleting b.ab ... done
+Deleting s.ab ... done
+Deleting d.ab ... done
+Deleting fort.* *.o *.exe *.*~ ... done
+Runner configured
+gfortran -fopenmp -O -c ab.f90 -o ab.o
+gfortran -fopenmp -O ab.o -o ab.exe /home/boldeman/auto/07p/lib/*.o
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(2)        L2-NORM         U(1)          U(2)     
+   1     1  EP    1   8.00000E+00   0.00000E+00   0.00000E+00   0.00000E+00
+   1    31  UZ    2   1.40000E+01   0.00000E+00   0.00000E+00   0.00000E+00
+   1    36  UZ    3   1.50000E+01   0.00000E+00   0.00000E+00   0.00000E+00
+   1    41  UZ    4   1.60000E+01   0.00000E+00   0.00000E+00   0.00000E+00
+   1    46  UZ    5   1.70000E+01   0.00000E+00   0.00000E+00   0.00000E+00
+   1    51  UZ    6   1.80000E+01   0.00000E+00   0.00000E+00   0.00000E+00
+
+ Total Time    0.125E-01
+ab ... done
+Saving fort.7 as b.ab ... done
+Saving fort.8 as s.ab ... done
+Saving fort.9 as d.ab ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM         U(1)          U(2)     
+   1    28  HB    7   1.65042E-01   1.47770E+00   4.05955E-01   1.42084E+00
+   1    58  UZ    8   2.50000E-01   2.94686E+00   8.09564E-01   2.83347E+00
+
+ Total Time    0.130E-01
+ab ... done
+Appending fort.7 to b.ab ... done
+Appending fort.8 to s.ab ... done
+Appending fort.9 to d.ab ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM       MAX U(1)      MAX U(2)       PERIOD    
+   7   161  UZ    9   2.50000E-01   3.02968E+00   9.95387E-01   6.87995E+00   2.22034E+00
+
+ Total Time    0.292E+00
+ab ... done
+Saving fort.7 as b.2p ... done
+Saving fort.8 as s.2p ... done
+Saving fort.9 as d.2p ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM       MAX U(1)      MAX U(2)       PERIOD    
+   7   161  UZ    9   2.50000E-01   3.02968E+00   9.95388E-01   6.87999E+00   2.22034E+00
+
+ Total Time    0.292E+00
+ab ... done
+Appending fort.7 to b.2p ... done
+Appending fort.8 to s.2p ... done
+Appending fort.9 to d.2p ... done
+Starting ab ...
+
+  BR    PT  TY  LAB    PAR(1)        L2-NORM       MAX U(1)      MAX U(2)       PERIOD    
+   7   161  UZ    9   2.50000E-01   3.02968E+00   9.95387E-01   6.87995E+00   2.22034E+00
+
+ Total Time    0.291E+00
+ab ... done
+Appending fort.7 to b.2p ... done
+Appending fort.8 to s.2p ... done
+Appending fort.9 to d.2p ... done

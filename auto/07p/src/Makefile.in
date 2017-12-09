@@ -1,0 +1,107 @@
+# ===> Makefile
+#
+#   Makefile            Xianjun WANG            3/1994
+#
+#   used to compile AUTO libraries
+#
+#
+CC=@CC@
+FC=@FC@
+CFLAGS=@CFLAGS@
+FFLAGS=@FFLAGS@
+OPT=@OPT_FLAG@
+OBJ= ../lib/main.o ../lib/blas.o ../lib/lapack.o
+RM=rm -f
+#
+all: lib compile ../lib/libauto_c.a move
+#
+lib:
+	@mkdir -p ../lib
+#
+compile: $(OBJ)
+#
+../lib/main.o: main.f90 ../lib/homcont.o ../lib/maps.o ../lib/optimization.o ../lib/parabolic.o ../lib/timeint.o
+	$(FC) $(FFLAGS) $(OPT) -c main.f90 -o $@
+#
+../lib/solvebv.o: solvebv.f90 ../lib/support.o
+	$(FC) $(FFLAGS) $(OPT) -c solvebv.f90 -o $@
+#
+../lib/interfaces.o: interfaces.f90 ../lib/support.o
+	$(FC) $(FFLAGS) $(OPT) -c interfaces.f90 -o $@
+#
+../lib/toolboxae.o: toolboxae.f90 ../lib/interfaces.o ../lib/ae.o
+	$(FC) $(FFLAGS) $(OPT) -c toolboxae.f90 -o $@
+#
+../lib/toolboxbv.o: toolboxbv.f90 ../lib/interfaces.o ../lib/bvp.o
+	$(FC) $(FFLAGS) $(OPT) -c toolboxbv.f90 -o $@
+#
+../lib/floquet.o: floquet.f90 ../lib/support.o
+	$(FC) $(FFLAGS) $(OPT) -c floquet.f90 -o $@
+#
+../lib/homcont.o: homcont.f90 ../lib/toolboxbv.o
+	$(FC) $(FFLAGS) $(OPT) -c homcont.f90 -o $@
+#
+../lib/equilibrium.o: equilibrium.f90 ../lib/toolboxae.o
+	$(FC) $(FFLAGS) $(OPT) -c equilibrium.f90 -o $@
+#
+../lib/maps.o: maps.f90 ../lib/equilibrium.o
+	$(FC) $(FFLAGS) $(OPT) -c maps.f90 -o $@
+#
+../lib/optimization.o: optimization.f90 ../lib/periodic.o ../lib/toolboxae.o
+	$(FC) $(FFLAGS) $(OPT) -c optimization.f90 -o $@
+#
+../lib/parabolic.o: parabolic.f90 ../lib/equilibrium.o ../lib/periodic.o
+	$(FC) $(FFLAGS) $(OPT) -c parabolic.f90 -o $@
+#
+../lib/periodic.o: periodic.f90 ../lib/toolboxbv.o ../lib/floquet.o
+	$(FC) $(FFLAGS) $(OPT) -c periodic.f90 -o $@
+#
+../lib/timeint.o: timeint.f90 ../lib/toolboxae.o
+	$(FC) $(FFLAGS) $(OPT) -c timeint.f90 -o $@
+#
+../lib/ae.o: ae.f90 ../lib/io.o ../lib/interfaces.o
+	$(FC) $(FFLAGS) $(OPT) -c ae.f90 -o $@
+#
+../lib/bvp.o: bvp.f90 ../lib/solvebv.o ../lib/io.o
+	$(FC) $(FFLAGS) $(OPT) -c bvp.f90 -o $@
+#
+../lib/support.o: support.f90 ../lib/mpi.o ../lib/mesh.o
+	$(FC) $(FFLAGS) $(OPT) -c support.f90 -o $@
+#
+../lib/io.o: io.f90 ../lib/support.o ../lib/compat.o
+	$(FC) $(FFLAGS) $(OPT) -c io.f90 -o $@
+#
+../lib/mesh.o: mesh.f90
+	$(FC) $(FFLAGS) $(OPT) -c mesh.f90 -o $@
+#
+../lib/auto_constants.o: auto_constants.f90 ../include/auto.h
+	$(FC) $(FFLAGS) $(OPT) -I../include -c auto_constants.f90 -o $@
+#
+../lib/libauto_c.a: user_c.c ../include/auto_f2c.h ../include/config.h
+	rm -f $@
+	$(CC) -I../include $(CFLAGS) $(OPT) -c user_c.c -o user_c.o
+	ar cr $@ user_c.o
+	rm -f user_c.o
+#
+../lib/lapack.o: lapack.f
+	$(FC) $(FFLAGS) $(OPT) -c lapack.f -o $@
+#
+../lib/blas.o: blas.f
+	$(FC) $(FFLAGS) $(OPT) -c blas.f -o $@
+#
+../lib/compat.o: @COMPAT@.f90
+	$(FC) $(FFLAGS) $(OPT) -c @COMPAT@.f90 -o $@
+#
+../lib/mpi.o: @MPIFILE@ ../lib/auto_constants.o
+	$(FC) $(FFLAGS) $(OPT) -c @MPIFILE@ -o $@
+#
+move: $(OBJ)
+	@$(RM) auto.h
+#
+superclean:
+	cd ../lib && rm -f *.o *.a
+	rm -f *.mod *.o
+	rmdir ../lib 2> /dev/null; true
+#
+#  DO NOT ADD ANYTHING AFTER THIS LINE
+#

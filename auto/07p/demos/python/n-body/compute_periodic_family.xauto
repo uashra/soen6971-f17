@@ -1,0 +1,184 @@
+# This is an example of an 'expert' AUTO CLUI script.
+# This scripts takes the Lagrange points computed
+# by the compute_lagrange_points_0.5.auto and
+# computes the periodic orbits emanating from them.
+
+# In expert scripts we need to explicitly import the
+# AUTOclui library
+from AUTOclui import *
+# There isn't a AUTO CLUI command for diagnostic
+# file parsing yet, but in a script such as
+# this we can just as easily import the parsing
+# class directly.
+import parseD
+
+# We also import a few general Python utility
+# libraries.
+import sys
+import math
+
+# We have divided the functionality if this
+# script into two functions, so that the
+# same ideas may be more easily used in
+# other contexts.
+def compute_periodic_family(starting_point,mu,compute_bifur_flag="no",npr=20):
+    # We load the 3d.c, the starting point file, and
+    # c.3d into the AUTO CLUI
+    # And we parse the starting solution.  This
+    # is mainly to determine what label the
+    # file contains.
+    starting_solution=load(starting_point,e='3d',c='3d')
+    
+    # We setup the calculation by setting the
+    # starting solution to be the appropriate label.
+    # And setting the problem type.  In this case
+    # we want to compute a family of equilibria.
+
+    # Our initial calculation it to go from 0.5
+    # to the desired mu value, so we put in a
+    # stopping condition for the mu value we want.
+
+    # Since we are starting at mu=0.5 we want to
+    # go down if the desired value is less, and
+    # go up if the desired value is more.
+    ds = starting_solution.c["DS"]
+    if mu < 0.5:
+        ds = -ds
+    # Run and get a parsed solution as well.
+    hopf_bifurcation = run(starting_solution,IPS=1,UZR={-1:mu},DS=ds)
+
+    # We save this solution
+    save(hopf_bifurcation,'hopf_bifurcation')
+    # Get just the solution
+    hopf_bifurcation = hopf_bifurcation()[-1]
+
+    # This will eventually become an AUTO2000 internal
+    # NOTE:  the interface to the parseD object is
+    # under development and may change significantly
+    # in the final version
+    parseD_object=parseD.parseD('fort.9')
+
+    # We print out the eigenvalues of the Jacobian.
+    print parseD_object[-2]["Eigenvalues"]
+
+    # In this loop we look for all eigenvalues
+    # with "zero" (i.e. sufficiently small) real part.
+    # We begin by defining an array in which the periods
+    # of the Hopf bifurcations will be stored.
+    periods = []
+    # The parseD_object is basically a Python list,
+    # so we use standard Python syntax to iterate
+    # over it.
+    for eigenvalue in parseD_object[-2]["Eigenvalues"]:
+        if math.fabs(eigenvalue[0]) < 1e-8:
+            # If the real part in sufficiently small
+            # we get the imaginary part
+            imag = math.fabs(eigenvalue[1])
+            print "imaginary part: ",imag
+            print "period        : ",2*math.pi/imag
+            # and compute the period.  If is is not in our
+            # list of periods (i.e. it is not a complex conjugate
+            # to one we have already computed) we add it.
+            if 2*math.pi/imag not in periods:
+                periods.append(2*math.pi/imag)
+
+    # Now we have an array which contains the initial periods of all of the
+    # periodic orbits emanating from the Hopf bifurcation.
+    # We iterate over them and calculate each family.
+    for period in periods:
+        # Since we have a parsed version of the initial solution
+        # it is easy to modify it to include the period
+        # we want.  In AUTO, the 11th parameter is always
+        # the period.
+        # Now, when this point was computed we had Hopf
+        # bifurcation detection turned off (since all
+        # points were Hopf bifurcations).  So, we manually
+        # mark the point as a Hopf bifurcation.
+        hopf_bifurcation = load(hopf_bifurcation,TY="HB",PAR={11:period})
+        
+        # We set the problem type, in this case we want to
+        # compute a family of periodic orbits.
+
+        # We turn off torus bifurcation detection, since there are
+        # lots of torus bifurcations.
+
+        # We want additional solutions to be saved, so we set NPR to
+        # a smaller value.
+
+        # We want the period, the y value at t=0, and the Jacobi constant to
+        # be printed out, so we add the appropriate parameters,
+
+        # And we run the calculation.
+        per = run(hopf_bifurcation, IPS=2, ISP=3, NPR=npr, ICP=[2,11,15,16])
+
+        # Finally, we save the solution.
+        save(per,'%s_mu_%f_period_%f'%(starting_point,mu,period))
+
+        # Now, if there were any bifurcation points detected we want
+        # to compute the branches emanating from them as well.
+        # Since this is a very common task, we have put that functionality
+        # into a subroutine.
+        if compute_bifur_flag == "yes":
+            compute_bifur(per,'%s_mu_%f_period_%f'%(starting_point,mu,period))
+
+# This subroutine takes a bifurcation diagram objec and a solution file name,
+# and for every bifurcation point in the diagram it attempts to
+# compute a bifurcating branch.
+def compute_bifur(problem,solution_file):
+    # Use problem('BP') to get a list of all branch points and
+    # then we can use standard Python syntax to iterate
+    # over it.
+    for solution in problem('BP'):
+        # ISW=-1 is the syntax for telling AUTO to switch branches
+        # at the bifurcation
+        # Compute forward
+        fw=run(solution,ISW=-1)
+        # Save the branch
+        save(fw,solution_file+"_+_"+`solution["LAB"]`)
+        # Compute backward by making the initial step-size negative
+        bw=run(solution,ISW=-1,DS='-')
+        # Save the branch
+        save(bw,solution_file+"_-_"+`solution["LAB"]`)
+
+
+# This is the Python syntax for making a script runable    
+if __name__ == '__main__':
+    # We want to have the option of computing the bifurcating
+    # branches or not, so we use the Python getopt
+    # routines to process command line options.
+    import getopt
+    # This line process the command line options and
+    # looks for a -b option
+    opts_list,args=getopt.getopt(sys.argv[1:],"bn:")
+    # We take the list of options generated by
+    # getopt command and turn it into a dictionary.
+    # This is not strictly necessary, but it makes
+    # it easier to use.
+    opts={}
+    for x in opts_list:
+        opts[x[0]]=x[1]
+
+    # If you use the -b option then we want to compute the bifurcating
+    # branches.
+    if "-b" in opts:
+        compute_bifur_flag="yes"
+    else:
+        compute_bifur_flag="no"
+
+    npr = 20
+    if "-n" in opts:
+        npr = int(opts["-n"])
+
+    # The first argument is the name of the file in
+    # which you find the starting point
+    starting_point = args[0]
+    # The second argument is the desired mu value.
+    mu = float(args[1])
+    compute_periodic_family(starting_point,mu,compute_bifur_flag,npr)
+
+
+
+
+
+
+

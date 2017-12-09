@@ -1,0 +1,13 @@
+This directory contains the following:
+
+README : this file.
+auto97.c : the Graphic User Interface(GUI) source code of AUTO97.
+c.aut : the default AUTO-constants file.
+aut.f : the default AUTO-equations file.
+Makefile.in : GUI makefile input file.
+auto.makefile.in : makefile used by the GUI at run time.
+Makefile : parsed copy of Makefile.in.
+auto.makefile : parsed copy of auto.makefile.in.
+==============================================================
+
+
