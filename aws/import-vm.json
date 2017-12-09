@@ -1,0 +1,9 @@
+[
+  {
+    "Description": "Scintific Linux 7.3 OVA",
+    "Format": "ova",
+    "UserBucket": {
+        "S3Bucket": "soen6971",
+        "S3Key": "packer-scientific-7.3-x86_64-1512719543-1512719543.ova"
+    }
+}]

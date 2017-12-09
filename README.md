@@ -21,8 +21,8 @@ Running virtual machines locally is resourse intensive and time intensive. On th
 Following steps require a configured AWS CLI tool.
 
 1. $ aws s3 mb --region ca-central-1a s3://soen6971
-2. $ aws iam create-role --role-name vmimport --assume-role-policy-document "file:///`pwd`trust-policy.json"
-3. $ aws iam put-role-policy --role-name vmimport --policy-name vmimport --policy-document "file:///`pwd`role-policy.json"
+2. $ aws iam create-role --role-name vmimport --assume-role-policy-document "file:///`pwd`/aws/trust-policy.json"
+3. $ aws iam put-role-policy --role-name vmimport --policy-name vmimport --policy-document "file:///`pwd`/aws/role-policy.json"
 
 ## Create OVA virtual machine for AWS
 
@@ -53,5 +53,5 @@ Sometimes packer build will take longer than expected without reporting progress
             }
         }]
      EOL
-3. $ aws ec2 import-image --license-type BYOL --disk-containers file://containers.json
+3. $ aws ec2 import-image --license-type BYOL --disk-containers file:///aws/import-vm.json
 4. $ watch aws ec2 describe-import-image-tasks --import-task-ids import-ami-fgu4xkq3
