@@ -1,0 +1,82 @@
+{
+
+  "variables":
+    {
+      "template_name": "scientific-7.3-x86_64",
+      "template_os": "RedHat_64",
+
+      "iso_url": "file:///home/umair/Downloads/Linux/Scientific Linux/SL-7-DVD-x86_64.iso",
+      "iso_checksum": "928513c04d5e86c91e6238576740f30f3d2b5449",
+      "iso_checksum_type": "sha1",
+
+      "memory_size": "512",
+      "cpu_count": "1",
+
+      "provisioner": "virtualbox"
+    },
+
+  "builders": [
+    {
+      "name": "{{user `template_name`}}-{{timestamp}}",
+      "type": "virtualbox-iso",
+      "format": "ova",
+      "boot_command": [
+        "<tab> <wait>",
+        "text <wait>",
+        "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/x86_64.ks <wait>",
+        "<enter>",
+        "<wait10> <wait10> <esc>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 20480,
+      "guest_os_type": "{{user `template_os`}}",
+      "http_directory": "files",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "ssh_username": "root",
+      "ssh_password": "puppet",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "/sbin/halt -h -p",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "virtualbox_version_file": ".vbox_version",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `memory_size`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpu_count`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--ioapic",
+          "off"
+        ]
+      ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "yum update -y",
+        "yum -y groupinstall \"X Window System\" \"Desktop\" \"Fonts\" \"General Purpose Desktop\"",
+        "yum install -y yum install tigervnc-server xorg-x11-fonts-Type1",
+        "mkdir -p /root/.vnc/ && echo puppet | vncpasswd -f > /root/.vnc/passwd && chmod 600 /root/.vnc/passwd",
+        "echo 'VNCSERVERS=\"1:root\"\nVNCSERVERARGS[1]=\"-geometry 800x600\"\nVNCSERVERARGS[2]=\"-geometry 800x600\"' >> /etc/sysconfig/vncservers"
+      ]
+    }
+  ],
+
+  "post-processors": [
+  ]
+}

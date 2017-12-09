@@ -1,0 +1,78 @@
+{
+
+  "variables":
+    {
+      "template_name": "scientific-7.3-x86_64",
+      "template_os": "RedHat_64",
+
+      "iso_url": "file:///home/umair/Downloads/Linux/Scientific Linux/SL-7.3-Everything-x86_64.iso",
+      "iso_checksum": "c2a2744a8669d4eba6370bad34f972e404e7961d",
+      "iso_checksum_type": "sha1",
+
+      "memory_size": "512",
+      "cpu_count": "1",
+
+      "provisioner": "virtualbox"
+    },
+
+  "builders": [
+    {
+      "name": "{{user `template_name`}}-{{timestamp}}",
+      "type": "virtualbox-iso",
+      "boot_command": [
+        "<tab> <wait>",
+        "text <wait>",
+        "ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/x86_64.ks <wait>",
+        "<enter>",
+        "<wait10> <wait10> <esc>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 20480,
+      "guest_os_type": "{{user `template_os`}}",
+      "http_directory": "files",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "ssh_username": "root",
+      "ssh_password": "puppet",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "/sbin/halt -h -p",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "virtualbox_version_file": ".vbox_version",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `memory_size`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpu_count`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--ioapic",
+          "off"
+        ]
+      ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "adduser vagrant",
+        "echo -n 'hashicorp\nhashicorp' | passwd vagrant",
+        "usermod -a -G root vagrant"
+      ]
+    }
+  ],
+
+  "post-processors": ["vagrant"]
+}
