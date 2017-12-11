@@ -87,6 +87,15 @@ class plotter(grapher.GUIGrapher):
             if key in kw:
                 optionDefaultsRC[key] = kw[key]
 
+        if "dashes" in optionDefaultsRC:
+            new_dashes = []
+            for i in optionDefaultsRC["dashes"]:
+                try:
+                    new_dashes.append(float(i))
+                except ValueError:
+                    new_dashes.append(i)
+            optionDefaultsRC["dashes"] = new_dashes
+
         self.__needsPlot = None
         grapher.GUIGrapher.__init__(self,parent,**optionDefaultsRC)
 
